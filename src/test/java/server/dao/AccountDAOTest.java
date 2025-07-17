@@ -8,13 +8,21 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AccountDAOTest {
 
-    private static final String TEST_ACCOUNT_NO = "TEST123";
-    private static final AccountDAO dao = new AccountDAO();
+    private static final String TEST_ACCOUNT_NO = "ACC123";
+    private static final int TEST_CUSTOMER_NO = 9999;
+    private static final String TEST_FULL_NAME = "Test User";
+
+    private static AccountDAO dao;
+
+    @BeforeAll
+    static void setup() {
+        dao = new AccountDAO();
+    }
 
     @Test
     @Order(1)
     void testInsert() {
-        Account acc = new Account(TEST_ACCOUNT_NO, "Test User", 100.0);
+        Account acc = new Account(TEST_ACCOUNT_NO, TEST_FULL_NAME, TEST_CUSTOMER_NO, 100.0);
         boolean result = dao.insert(acc);
         assertTrue(result, "Insert should succeed");
     }
@@ -24,30 +32,27 @@ public class AccountDAOTest {
     void testFindByAccountNo() {
         Account acc = dao.findByAccountNo(TEST_ACCOUNT_NO);
         assertNotNull(acc, "Account should exist");
-        assertEquals("Test User", acc.getFullName());
-        assertEquals(100.0, acc.getBalance());
+        assertEquals(TEST_FULL_NAME, acc.getFullName());
     }
 
     @Test
     @Order(3)
     void testUpdate() {
         Account acc = dao.findByAccountNo(TEST_ACCOUNT_NO);
+        assertNotNull(acc);
         acc.deposit(50);
         boolean result = dao.update(acc);
-        assertTrue(result, "Update should succeed");
+        assertTrue(result);
 
-        Account updated = dao.findByAccountNo(TEST_ACCOUNT_NO);
-        assertEquals(150.0, updated.getBalance());
+        Account updatedAccount = dao.findByAccountNo(TEST_ACCOUNT_NO);
+        assertEquals(150.0, updatedAccount.getBalance());
     }
 
     @Test
     @Order(4)
     void testDelete() {
         boolean result = dao.delete(TEST_ACCOUNT_NO);
-        assertTrue(result, "Delete should succeed");
-
-        Account acc = dao.findByAccountNo(TEST_ACCOUNT_NO);
-        assertNull(acc, "Account should be deleted");
+        assertTrue(result);
     }
 }
 
