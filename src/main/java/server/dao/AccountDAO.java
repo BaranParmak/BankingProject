@@ -1,17 +1,16 @@
 package server.dao;
 
 import common.Account;
-
 import java.sql.*;
 
 public class AccountDAO {
 
-    // Fetch an account by its account number
     public Account findByAccountNo(String accountNo) {
         String sql = "SELECT * FROM accounts WHERE account_no = ?";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
+
             stmt.setString(1, accountNo);
             ResultSet rs = stmt.executeQuery();
 
@@ -25,11 +24,9 @@ public class AccountDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return null;
     }
 
-    // ✅ NEW: Fetch an account by customer number
     public Account findByCustomerNo(int customerNo) {
         String sql = "SELECT * FROM accounts WHERE customer_no = ?";
 
@@ -53,7 +50,6 @@ public class AccountDAO {
         return null;
     }
 
-    // Insert a new account
     public boolean insert(Account account) {
         String sql = "INSERT INTO accounts(account_no, full_name, balance, customer_no) VALUES (?, ?, ?, ?)";
 
@@ -74,7 +70,6 @@ public class AccountDAO {
         return false;
     }
 
-    // Update account balance
     public boolean update(Account account) {
         String sql = "UPDATE accounts SET balance = ? WHERE account_no = ?";
 
@@ -93,13 +88,11 @@ public class AccountDAO {
         return false;
     }
 
-    // Delete account
     public boolean delete(String accountNo) {
         String sql = "DELETE FROM accounts WHERE account_no = ?";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-
             stmt.setString(1, accountNo);
             return stmt.executeUpdate() > 0;
 
@@ -109,5 +102,45 @@ public class AccountDAO {
 
         return false;
     }
-}
 
+    //✅ Transfer metodu düzenlenmiş son hali (temiz ve çalışır durumda)
+    public boolean transfer(String senderAccountNo, String receiverAccountNo, double amount) {
+        try (Connection conn = DBConnection.getConnection()) {
+            conn.setAutoCommit(false);
+
+            try (PreparedStatement withdrawStmt = conn.prepareStatement("UPDATE accounts SET balance = balance - ? WHERE account_no = ? AND balance >= ?");
+                 PreparedStatement depositStmt = conn.prepareStatement("UPDATE accounts SET balance = balance + ? WHERE account_no = ?")) {
+
+                withdrawStmt.setDouble(1, amount);
+                withdrawStmt.setString(2, senderAccountNo);
+                withdrawStmt.setDouble(3, amount);
+                int withdrawResult = withdrawStmt.executeUpdate();
+
+                if (withdrawResult == 0) {
+                    conn.rollback();
+                    return false;
+                }
+
+                depositStmt.setDouble(1, amount);
+                depositStmt.setString(2, receiverAccountNo);
+                int depositResult = depositStmt.executeUpdate();
+                if (depositResult == 0) {
+                    conn.rollback();
+                    return false;
+                }
+
+                conn.commit();
+                return true;
+            } catch (SQLException ex) {
+                conn.rollback();
+                ex.printStackTrace();
+                return false;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+}

@@ -52,6 +52,7 @@ public class Main {
 
         if (account == null) {
             System.out.println("No account found for user. Exiting.");
+            scanner.close();
             return;
         }
 
@@ -63,20 +64,15 @@ public class Main {
             System.out.println("1. Show Balance");
             System.out.println("2. Deposit");
             System.out.println("3. Withdraw");
-            System.out.println("4. Exit");
+            System.out.println("4. Transfer");
+            System.out.println("5. Exit");
             System.out.print("Choose: ");
 
-            int menuChoice;
-            try {
-                menuChoice = Integer.parseInt(scanner.nextLine());
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid input.");
-                continue;
-            }
+            String menuChoice = scanner.nextLine();
 
             switch (menuChoice) {
-                case 1 -> System.out.printf("Balance: $%.2f\n", account.getBalance());
-                case 2 -> {
+                case "1" -> System.out.printf("Balance: $%.2f\n", account.getBalance());
+                case "2" -> {
                     System.out.print("Enter amount: ");
                     double amount;
                     try {
@@ -85,11 +81,13 @@ public class Main {
                         System.out.println("Invalid amount.");
                         continue;
                     }
-                    if (transactionService.deposit(amount)) System.out.println("Deposit successful");
-                    else System.out.println("Invalid amount");
+                    if (transactionService.deposit(amount))
+                        System.out.println("Deposit successful");
+                    else
+                        System.out.println("Deposit failed. Invalid amount.");
                 }
-                case 3 -> {
-                    System.out.print("Enter amount: ");
+                case "3" -> {
+                    System.out.print("Enter amount to withdraw: ");
                     double amount;
                     try {
                         amount = Double.parseDouble(scanner.nextLine());
@@ -102,11 +100,34 @@ public class Main {
                     else
                         System.out.println("Insufficient balance or invalid amount");
                 }
-                case 4 -> running = false;
+                case "4" -> {
+                    System.out.print("Receiver Account Number: ");
+                    String receiverAccNo = scanner.nextLine();
+
+                    System.out.print("Enter transfer amount: ");
+                    double amount;
+                    try {
+                        amount = Double.parseDouble(scanner.nextLine());
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid amount.");
+                        continue;
+                    }
+
+                    boolean transferSuccess = transactionService.transfer(receiverAccNo, amount);
+                    if (transferSuccess) {
+                        System.out.println("Transfer successful.");
+                        account = transactionService.getAccount();
+                    } else {
+                        System.out.println("Transfer failed. Check your balance or receiver account.");
+                    }
+                }
+                case "5" -> {
+                    System.out.println("Goodbye!");
+                    running = false;
+                }
                 default -> System.out.println("Invalid option");
             }
         }
-        System.out.println("Thank you!");
         scanner.close();
     }
 
@@ -123,4 +144,5 @@ public class Main {
         return authService.registerNewUser(username, password, fullName);
     }
 }
+
 
