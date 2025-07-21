@@ -2,32 +2,31 @@ package client.net;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.Scanner;
 
 public class ClientNetworkHandler {
-    public static void main(String[] args) {
-        String host = "localhost";  // Server IP or hostname
-        int port = 12345;
+    private static final String SERVER_HOST = "192.168.137.172"; // Your server IP
+    private static final int SERVER_PORT = 12345;
 
-        try (Socket socket = new Socket(host, port)) {
-            System.out.println("Connected to server.");
+    private Socket socket;
+    private BufferedReader in;
+    private PrintWriter out;
 
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+    public ClientNetworkHandler() throws IOException {
+        socket = new Socket(SERVER_HOST, SERVER_PORT);
+        in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        out = new PrintWriter(socket.getOutputStream(), true);
+        System.out.println("Connected to server at " + SERVER_HOST);
+    }
 
-            Scanner scanner = new Scanner(System.in);
-            System.out.print("Enter message to send: ");
-            String message = scanner.nextLine();
+    public String sendRequest(String request) throws IOException {
+        out.println(request);
+        return in.readLine();
+    }
 
-            out.println(message);
-
-            String response = in.readLine();
-            System.out.println("Response from server: " + response);
-
-            scanner.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void close() throws IOException {
+        if (in != null) in.close();
+        if (out != null) out.close();
+        if (socket != null) socket.close();
     }
 }
 

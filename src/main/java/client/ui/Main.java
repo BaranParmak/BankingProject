@@ -1,17 +1,25 @@
 package client.ui;
 
-import service.AuthenticationService;
-import service.TransactionService;
-import common.User;
+import client.net.ClientNetworkHandler;
 import common.Account;
+import common.User;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 public class Main {
     static Scanner scanner = new Scanner(System.in);
+    static ClientNetworkHandler networkHandler;
 
     public static void main(String[] args) {
-        AuthenticationService authService = new AuthenticationService();
+        try {
+            networkHandler = new ClientNetworkHandler();
+        } catch (IOException e) {
+            System.out.println("Failed to connect to server. Please check if server is running.");
+            e.printStackTrace();
+            return;
+        }
+
         User loggedInUser = null;
 
         while (loggedInUser == null) {
@@ -20,39 +28,36 @@ public class Main {
             System.out.print("Choose: ");
             String choice = scanner.nextLine();
 
-            if(choice.equals("1")){
+            if (choice.equals("1")) {
                 System.out.print("Username: ");
                 String username = scanner.nextLine();
 
                 System.out.print("Password: ");
                 String password = scanner.nextLine();
 
-                loggedInUser = authService.login(username, password);
+                loggedInUser = login(username, password);
                 if (loggedInUser == null) {
                     System.out.println("Invalid username or password. Try again.");
                 }
-            }
-            else if(choice.equals("2")){
-                boolean registered = register(authService);
-                if(registered){
+            } else if (choice.equals("2")) {
+                boolean registered = register();
+                if (registered) {
                     System.out.println("User registered successfully. You can login now.");
                 } else {
                     System.out.println("Registration failed.");
                 }
-            }
-            else{
+            } else {
                 System.out.println("Invalid choice.");
             }
         }
 
         System.out.printf("Welcome %s!\n", loggedInUser.getFullName());
 
-        TransactionService transactionService = new TransactionService(loggedInUser.getCustomerNo());
-        Account account = transactionService.getAccount();
+        Account account = getAccount(loggedInUser.getCustomerNo());
 
         if (account == null) {
             System.out.println("No account found for user. Exiting.");
-            scanner.close();
+            closeConnection();
             return;
         }
 
@@ -81,10 +86,12 @@ public class Main {
                         System.out.println("Invalid amount.");
                         continue;
                     }
-                    if (transactionService.deposit(amount))
+                    if (deposit(account.getAccountNo(), amount)) {
                         System.out.println("Deposit successful");
-                    else
+                        account = getAccount(loggedInUser.getCustomerNo()); // Refresh account data
+                    } else {
                         System.out.println("Deposit failed. Invalid amount.");
+                    }
                 }
                 case "3" -> {
                     System.out.print("Enter amount to withdraw: ");
@@ -95,10 +102,12 @@ public class Main {
                         System.out.println("Invalid amount.");
                         continue;
                     }
-                    if (transactionService.withdraw(amount))
+                    if (withdraw(account.getAccountNo(), amount)) {
                         System.out.println("Withdraw successful");
-                    else
+                        account = getAccount(loggedInUser.getCustomerNo()); // Refresh account data
+                    } else {
                         System.out.println("Insufficient balance or invalid amount");
+                    }
                 }
                 case "4" -> {
                     System.out.print("Receiver Account Number: ");
@@ -113,10 +122,10 @@ public class Main {
                         continue;
                     }
 
-                    boolean transferSuccess = transactionService.transfer(receiverAccNo, amount);
+                    boolean transferSuccess = transfer(account.getAccountNo(), receiverAccNo, amount);
                     if (transferSuccess) {
                         System.out.println("Transfer successful.");
-                        account = transactionService.getAccount();
+                        account = getAccount(loggedInUser.getCustomerNo()); // Refresh account data
                     } else {
                         System.out.println("Transfer failed. Check your balance or receiver account.");
                     }
@@ -128,10 +137,26 @@ public class Main {
                 default -> System.out.println("Invalid option");
             }
         }
-        scanner.close();
+        closeConnection();
     }
 
-    private static boolean register(AuthenticationService authService) {
+    private static User login(String username, String password) {
+        try {
+            String response = networkHandler.sendRequest("LOGIN:" + username + ":" + password);
+            String[] parts = response.split(":");
+            if (parts[0].equals("SUCCESS")) {
+                int customerNo = Integer.parseInt(parts[1]);
+                String fullName = parts[2];
+                return new User(username, password, fullName, customerNo);
+            }
+        } catch (IOException e) {
+            System.out.println("Error connecting to server.");
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private static boolean register() {
         System.out.print("Choose username: ");
         String username = scanner.nextLine();
 
@@ -141,7 +166,75 @@ public class Main {
         System.out.print("Full Name: ");
         String fullName = scanner.nextLine();
 
-        return authService.registerNewUser(username, password, fullName);
+        try {
+            String response = networkHandler.sendRequest("REGISTER:" + username + ":" + password + ":" + fullName);
+            return response.equals("SUCCESS");
+        } catch (IOException e) {
+            System.out.println("Error connecting to server.");
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private static Account getAccount(int customerNo) {
+        try {
+            String response = networkHandler.sendRequest("GETACCOUNT:" + customerNo);
+            String[] parts = response.split(":");
+            if (parts[0].equals("SUCCESS")) {
+                String accountNo = parts[1];
+                String fullName = parts[2];
+                double balance = Double.parseDouble(parts[3]);
+                return new Account(accountNo, fullName, customerNo, balance);
+            }
+        } catch (IOException e) {
+            System.out.println("Error connecting to server.");
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private static boolean deposit(String accountNo, double amount) {
+        try {
+            String response = networkHandler.sendRequest("DEPOSIT:" + accountNo + ":" + amount);
+            return response.equals("SUCCESS");
+        } catch (IOException e) {
+            System.out.println("Error connecting to server.");
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private static boolean withdraw(String accountNo, double amount) {
+        try {
+            String response = networkHandler.sendRequest("WITHDRAW:" + accountNo + ":" + amount);
+            return response.equals("SUCCESS");
+        } catch (IOException e) {
+            System.out.println("Error connecting to server.");
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private static boolean transfer(String senderAccNo, String receiverAccNo, double amount) {
+        try {
+            String response = networkHandler.sendRequest("TRANSFER:" + senderAccNo + ":" + receiverAccNo + ":" + amount);
+            return response.equals("SUCCESS");
+        } catch (IOException e) {
+            System.out.println("Error connecting to server.");
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private static void closeConnection() {
+        try {
+            if (networkHandler != null) {
+                networkHandler.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        scanner.close();
     }
 }
 
