@@ -18,16 +18,16 @@ public class AuthenticationService {
         return userDAO.findByUsernameAndPassword(username, password);
     }
 
-    // YENİ EKLENEN REGISTER METODU-
+    // NEWLY ADDED REGISTER METHOD
     public boolean registerNewUser(String username, String password, String fullName) {
-        int customerNo = (int)(System.currentTimeMillis()/1000); // Basit bir şekilde unique ID
+        int customerNo = (int)(System.currentTimeMillis()/1000); // Simple way to generate a unique ID
 
         User user = new User(username, password, fullName, customerNo);
 
         boolean userInserted = userDAO.insert(user);
         if (!userInserted) return false;
 
-        String accountNo = "AC" + customerNo; // Örneğin basitleştirilmiş bir account numarası üretimi
+        String accountNo = "AC" + customerNo; // Example of simplified account number generation
         Account account = new Account(accountNo, fullName, customerNo, 0.0);
         return accountDAO.insert(account);
     }

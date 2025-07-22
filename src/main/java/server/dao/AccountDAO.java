@@ -103,7 +103,6 @@ public class AccountDAO {
         return false;
     }
 
-    //✅ Transfer metodu düzenlenmiş son hali (temiz ve çalışır durumda)
     public boolean transfer(String senderAccountNo, String receiverAccountNo, double amount) {
         try (Connection conn = DBConnection.getConnection()) {
             conn.setAutoCommit(false);

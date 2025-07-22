@@ -27,7 +27,7 @@ public class TransactionService {
         boolean result = accountDAO.update(account);
 
         if (result) {
-            account = accountDAO.findByAccountNo(account.getAccountNo()); // güncel bilgiyi al
+            account = accountDAO.findByAccountNo(account.getAccountNo()); // get updated information
         }
 
         return result;
@@ -37,7 +37,7 @@ public class TransactionService {
         if(account.withdraw(amount)){
             boolean result = accountDAO.update(account);
             if (result) {
-                account = accountDAO.findByAccountNo(account.getAccountNo()); // güncel bilgisi alınır
+                account = accountDAO.findByAccountNo(account.getAccountNo()); // updated information is retrieved
             }
             return result;
         }
@@ -51,7 +51,7 @@ public class TransactionService {
         boolean result = accountDAO.transfer(account.getAccountNo(), receiverAccountNo, amount);
 
         if(result){
-            account = accountDAO.findByAccountNo(account.getAccountNo()); // güncel hesap bilgisi
+            account = accountDAO.findByAccountNo(account.getAccountNo()); // updated account information
         }
         return result;
     }
