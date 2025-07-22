@@ -53,6 +53,7 @@ public class Main {
 
         System.out.printf("Welcome %s!\n", loggedInUser.getFullName());
 
+        // Always fetch the latest account information
         Account account = getAccount(loggedInUser.getCustomerNo());
 
         if (account == null) {
@@ -76,7 +77,11 @@ public class Main {
             String menuChoice = scanner.nextLine();
 
             switch (menuChoice) {
-                case "1" -> System.out.printf("Balance: $%.2f\n", account.getBalance());
+                case "1" -> {
+                    // Always get fresh balance data when showing balance
+                    account = getAccount(loggedInUser.getCustomerNo());
+                    System.out.printf("Balance: $%.2f\n", account.getBalance());
+                }
                 case "2" -> {
                     System.out.print("Enter amount: ");
                     double amount;
@@ -88,7 +93,8 @@ public class Main {
                     }
                     if (deposit(account.getAccountNo(), amount)) {
                         System.out.println("Deposit successful");
-                        account = getAccount(loggedInUser.getCustomerNo()); // Refresh account data
+                        // Refresh account data after successful deposit
+                        account = getAccount(loggedInUser.getCustomerNo());
                     } else {
                         System.out.println("Deposit failed. Invalid amount.");
                     }
@@ -104,7 +110,8 @@ public class Main {
                     }
                     if (withdraw(account.getAccountNo(), amount)) {
                         System.out.println("Withdraw successful");
-                        account = getAccount(loggedInUser.getCustomerNo()); // Refresh account data
+                        // Refresh account data after successful withdrawal
+                        account = getAccount(loggedInUser.getCustomerNo());
                     } else {
                         System.out.println("Insufficient balance or invalid amount");
                     }
@@ -125,7 +132,8 @@ public class Main {
                     boolean transferSuccess = transfer(account.getAccountNo(), receiverAccNo, amount);
                     if (transferSuccess) {
                         System.out.println("Transfer successful.");
-                        account = getAccount(loggedInUser.getCustomerNo()); // Refresh account data
+                        // Refresh account data after successful transfer
+                        account = getAccount(loggedInUser.getCustomerNo());
                     } else {
                         System.out.println("Transfer failed. Check your balance or receiver account.");
                     }
@@ -237,5 +245,3 @@ public class Main {
         scanner.close();
     }
 }
-
-
