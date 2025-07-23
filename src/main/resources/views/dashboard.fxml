@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+
+<StackPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="client.ui.controllers.DashboardController"
+           prefHeight="600.0" prefWidth="900.0"
+           stylesheets="/css/style.css">
+
+    <AnchorPane>
+        <!-- Main content -->
+        <VBox alignment="CENTER" spacing="20" maxWidth="600" AnchorPane.leftAnchor="150"
+              AnchorPane.rightAnchor="150" AnchorPane.topAnchor="50" AnchorPane.bottomAnchor="50">
+
+            <!-- Logo -->
+            <ImageView fitWidth="240" fitHeight="240" styleClass="logo">
+                <Image url="/images/logo.png"/>
+            </ImageView>
+
+            <!-- Welcome Label -->
+            <Label fx:id="welcomeLabel" text="Welcome, User"
+                   style="-fx-font-size: 16px; -fx-text-fill: white;"/>
+
+            <Label text="Money Transactions" style="-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: #ccff00;"/>
+            <Label text="Welcome back! Please choose your transaction type."
+                   style="-fx-font-size: 14px; -fx-text-fill: #aaaaaa;" wrapText="true" textAlignment="CENTER"/>
+
+            <Region prefHeight="30"/>
+
+            <Button text="1- SHOW BALANCE" onAction="#handleShowBalance" styleClass="transaction-button"/>
+            <Button text="2- DEPOSIT" onAction="#handleDepositAction" styleClass="transaction-button"/>
+            <Button text="3- WITHDRAW" onAction="#handleWithdrawAction" styleClass="transaction-button"/>
+            <Button text="4- MONEY TRANSFER" onAction="#handleTransferAction" styleClass="transaction-button"/>
+            <Button text="5- EXIT" onAction="#handleLogout" styleClass="transaction-button"/>
+
+            <Label fx:id="statusLabel" textFill="RED" alignment="CENTER"/>
+        </VBox>
+    </AnchorPane>
+</StackPane>

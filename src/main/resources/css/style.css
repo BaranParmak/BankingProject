@@ -1,0 +1,79 @@
+/* Global Styles */
+.root {
+    -fx-background-color: #121212;
+    -fx-font-family: "Segoe UI", sans-serif;
+}
+
+.label {
+    -fx-text-fill: white;
+}
+
+/* TextField Styles */
+.text-field, .password-field {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-background-radius: 5px;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: rgba(255, 255, 255, 0.5);
+    -fx-padding: 10px;
+    -fx-border-width: 0;
+}
+
+/* Button Styles */
+.primary-button {
+    -fx-background-color: #ccff00;
+    -fx-text-fill: black;
+    -fx-background-radius: 30px;
+    -fx-font-weight: bold;
+    -fx-padding: 12px;
+    -fx-cursor: hand;
+}
+
+.secondary-button {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-text-fill: white;
+    -fx-background-radius: 30px;
+    -fx-padding: 12px;
+    -fx-cursor: hand;
+}
+
+/* Transaction Button */
+.transaction-button {
+    -fx-background-color: #ccff00;
+    -fx-text-fill: black;
+    -fx-background-radius: 30px;
+    -fx-font-weight: bold;
+    -fx-padding: 15px;
+    -fx-cursor: hand;
+    -fx-min-width: 300px;
+}
+
+/* User Card */
+.user-card {
+    -fx-background-color: #ccff00;
+    -fx-background-radius: 15px;
+    -fx-padding: 10px;
+}
+
+/* Dialog Box */
+.dialog-box {
+    -fx-background-color: rgba(30, 30, 30, 0.9);
+    -fx-background-radius: 10px;
+    -fx-border-color: #333;
+    -fx-border-width: 1px;
+    -fx-border-radius: 10px;
+    -fx-padding: 20px;
+}
+
+.accept-button {
+    -fx-background-color: #32CD32;
+    -fx-text-fill: white;
+    -fx-background-radius: 5px;
+    -fx-cursor: hand;
+}
+
+.reject-button {
+    -fx-background-color: #FF0000;
+    -fx-text-fill: white;
+    -fx-background-radius: 5px;
+    -fx-cursor: hand;
+}

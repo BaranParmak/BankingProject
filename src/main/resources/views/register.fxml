@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+
+<StackPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="client.ui.controllers.RegisterController"
+           prefHeight="600.0" prefWidth="900.0"
+           stylesheets="/css/style.css">
+
+    <AnchorPane>
+        <!-- Main content -->
+        <VBox alignment="CENTER" spacing="15" maxWidth="500" AnchorPane.leftAnchor="200"
+              AnchorPane.rightAnchor="200" AnchorPane.topAnchor="100" AnchorPane.bottomAnchor="100">
+
+            <!-- Logo -->
+            <ImageView fitWidth="240" fitHeight="240" styleClass="logo">
+                <Image url="/images/logo.png"/>
+            </ImageView>
+
+            <Label text="Register" style="-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: #ccff00;"/>
+            <Label text="Create a new account to access banking services."
+                   style="-fx-font-size: 14px; -fx-text-fill: #aaaaaa;" wrapText="true" textAlignment="CENTER"/>
+
+            <Region prefHeight="20"/>
+
+            <TextField fx:id="usernameField" promptText="Enter your Username" styleClass="text-field"/>
+            <PasswordField fx:id="passwordField" promptText="Enter your Password" styleClass="password-field"/>
+            <TextField fx:id="fullNameField" promptText="Enter your Full Name" styleClass="text-field"/>
+
+            <Region prefHeight="10"/>
+
+            <Button text="Register" onAction="#handleRegister" styleClass="primary-button" maxWidth="Infinity"/>
+
+            <Label fx:id="statusLabel" textFill="RED" alignment="CENTER"/>
+        </VBox>
+    </AnchorPane>
+</StackPane>
