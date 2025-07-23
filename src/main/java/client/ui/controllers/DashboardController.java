@@ -45,7 +45,7 @@ public class DashboardController {
 
                 userAccount = new Account(accountNo, fullName, currentUser.getCustomerNo(), balance);
 
-                // Özel AlertDialog kullanımı
+                // Using custom AlertDialog
                 AlertDialog.showInfoDialog(
                         "Account Balance",
                         "Your account number: " + accountNo + "\n\n" +
@@ -85,7 +85,7 @@ public class DashboardController {
                 TransferController transferController = loader.getController();
                 transferController.initData(currentUser, networkHandler);
 
-                // Mevcut pencere boyutunu ve durumunu al
+                // Get current window size and state
                 Stage stage = (Stage) statusLabel.getScene().getWindow();
                 boolean isMaximized = stage.isMaximized();
                 double width = stage.getWidth();
@@ -93,7 +93,7 @@ public class DashboardController {
 
                 stage.setScene(new Scene(transferView));
 
-                // Boyutu ve durumu koruma
+                // Preserve size and state
                 stage.setWidth(width);
                 stage.setHeight(height);
                 stage.setMaximized(isMaximized);
@@ -109,7 +109,7 @@ public class DashboardController {
     }
 
     private void openTransactionView(String transactionType) {
-        // TextInputDialog yerine kendi özel dialogumuzu kullanıyoruz
+        // Using our custom dialog instead of TextInputDialog
         Optional<String> result = AlertDialog.showInputDialog(
                 transactionType.substring(0, 1).toUpperCase() + transactionType.substring(1),
                 "Enter amount to " + transactionType,
@@ -177,7 +177,7 @@ public class DashboardController {
         try {
             Parent loginView = FXMLLoader.load(getClass().getResource("/views/login.fxml"));
 
-            // Mevcut pencere boyutunu ve durumunu al
+            // Get current window size and stat
             Stage stage = (Stage) statusLabel.getScene().getWindow();
             boolean isMaximized = stage.isMaximized();
             double width = stage.getWidth();
@@ -187,14 +187,14 @@ public class DashboardController {
             stage.setScene(loginScene);
             stage.setTitle("Login");
 
-            // Boyutu ve durumu koruma
+            // Preserve size and state
             stage.setWidth(width);
             stage.setHeight(height);
             stage.setMaximized(isMaximized);
 
             stage.show();
 
-            // Login ekranına geçtikten sonra da ekranın yeniden düzenlenmesini zorla
+            // Force layout refresh after transitioning to login screen
             Platform.runLater(() -> {
                 if (isMaximized) {
                     stage.setMaximized(false);

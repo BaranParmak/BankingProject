@@ -29,30 +29,30 @@ public class LoginController {
             networkHandler = new ClientNetworkHandler();
             statusLabel.setText("Connected to server");
 
-            // Ekran yüklendikten sonra layout'u zorla güncelle
+            // Force update layout after screen is loaded
             Platform.runLater(() -> {
-                // Pencereyi alabilmek için scene'in yüklenmesini bekle
+                // Wait for scene to load to get the window
                 if (usernameField.getScene() != null) {
                     Stage stage = (Stage) usernameField.getScene().getWindow();
                     double width = stage.getWidth();
                     double height = stage.getHeight();
                     boolean isMaximized = stage.isMaximized();
 
-                    // Eğer tam ekransa, tam ekrandan çıkar
+                    // If maximized, exit full screen
                     if (isMaximized) {
                         stage.setMaximized(false);
                     }
 
-                    // Küçük bir değişiklik yapıp hemen geri al
+                    // Make a small change and immediately revert it
                     stage.setWidth(width - 1);
                     stage.setHeight(height - 1);
 
-                    // Tekrar orijinal boyutuna getir
+                    // Restore to original size
                     Platform.runLater(() -> {
                         stage.setWidth(width);
                         stage.setHeight(height);
 
-                        // Eğer tam ekransa, tekrar tam ekran yap
+                        // If it was maximized, restore full screen
                         if (isMaximized) {
                             stage.setMaximized(true);
                         }
@@ -101,7 +101,7 @@ public class LoginController {
                 // Get current stage
                 Stage stage = (Stage) usernameField.getScene().getWindow();
 
-                // Mevcut pencere boyutunu ve durumunu al
+                // Get current window size and state
                 boolean isMaximized = stage.isMaximized();
                 double width = stage.getWidth();
                 double height = stage.getHeight();
@@ -111,7 +111,7 @@ public class LoginController {
                 stage.setScene(dashboardScene);
                 stage.setTitle("Banking Dashboard");
 
-                // Boyutu ve durumu koruma
+                // Preserve size and state
                 stage.setWidth(width);
                 stage.setHeight(height);
                 stage.setMaximized(isMaximized);
@@ -122,9 +122,9 @@ public class LoginController {
                 // Show the updated stage
                 stage.show();
 
-                // Dashboard'a geçtikten sonra ekranın yeniden düzenlenmesini zorla
+                // Force layout refresh after transitioning to dashboard
                 Platform.runLater(() -> {
-                    // Aynı ekran boyutlandırma trick'i
+                    // Same screen sizing trick
                     if (isMaximized) {
                         stage.setMaximized(false);
                     }
@@ -162,7 +162,7 @@ public class LoginController {
             RegisterController registerController = loader.getController();
             registerController.setNetworkHandler(networkHandler);
 
-            // Mevcut pencere boyutunu ve durumunu al
+            // Get current window size and state
             Stage stage = (Stage) usernameField.getScene().getWindow();
             boolean isMaximized = stage.isMaximized();
             double width = stage.getWidth();
@@ -175,14 +175,14 @@ public class LoginController {
             stage.setScene(registerScene);
             stage.setTitle("Register");
 
-            // Boyutu ve durumu koruma
+            // Preserve size and state
             stage.setWidth(width);
             stage.setHeight(height);
             stage.setMaximized(isMaximized);
 
             stage.show();
 
-            // Register ekranına geçtikten sonra da ekranın yeniden düzenlenmesini zorla
+            // Force layout refresh after transitioning to register screen
             Platform.runLater(() -> {
                 if (isMaximized) {
                     stage.setMaximized(false);

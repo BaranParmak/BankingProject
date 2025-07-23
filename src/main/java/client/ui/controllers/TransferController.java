@@ -33,30 +33,30 @@ public class TransferController {
 
     @FXML
     public void initialize() {
-        // Ekran yüklendikten sonra layout'u zorla güncelle
+        // Force update layout after screen is loaded
         Platform.runLater(() -> {
-            // Önce pencereyi bir piksel küçültüp sonra tekrar büyütelim
-            // Bu layout'un yenilenmesini zorlayacak
+            // First reduce window size by one pixel then restore it
+            // This will force layout refresh
             Stage stage = (Stage) receiverAccountField.getScene().getWindow();
             double width = stage.getWidth();
             double height = stage.getHeight();
             boolean wasMaximized = stage.isMaximized();
 
-            // Eğer tam ekransa, tam ekrandan çıkar
+            // If maximized, exit full screen
             if (wasMaximized) {
                 stage.setMaximized(false);
             }
 
-            // Küçük bir değişiklik yapıp hemen geri al
+            // Make a small change and immediately revert it
             stage.setWidth(width - 1);
             stage.setHeight(height - 1);
 
-            // Tekrar orijinal boyutuna getir
+            // Restore to original size
             Platform.runLater(() -> {
                 stage.setWidth(width);
                 stage.setHeight(height);
 
-                // Eğer tam ekransa, tekrar tam ekran yap
+                // If it was maximized, restore full screen
                 if (wasMaximized) {
                     stage.setMaximized(true);
                 }
@@ -115,7 +115,7 @@ public class TransferController {
 
             receiverAccount = receiverAccountField.getText();
 
-            // confirmationDialog yerine AlertDialog kullanımı
+            // Using AlertDialog instead of confirmationDialog
             boolean confirmed = AlertDialog.showConfirmDialog(
                     "Confirm Transfer",
                     "Are you sure you want to transfer $" + String.format("%.2f", transferAmount) +
@@ -139,7 +139,7 @@ public class TransferController {
                     ":" + receiverAccount + ":" + transferAmount);
 
             if (response.equals("SUCCESS")) {
-                // Özel AlertDialog kullanımı
+                // Using custom AlertDialog
                 AlertDialog.showInfoDialog(
                         "Transfer Successful",
                         "$" + String.format("%.2f", transferAmount) +
@@ -159,20 +159,20 @@ public class TransferController {
 
     @FXML
     private void handleAccept() {
-        // Bu metod artık kullanılmıyor, fakat FXML referansları için tutuldu
+        // This method is no longer used, but kept for FXML references
         processTransfer();
     }
 
     @FXML
     private void handleReject() {
-        // Bu metod artık kullanılmıyor, fakat FXML referansları için tutuldu
+        // This method is no longer used, but kept for FXML references
         confirmationDialog.setVisible(false);
         statusLabel.setText("Transfer cancelled");
     }
 
     @FXML
     private void handleBack() {
-        // Ana ekrana geri dön
+        // Return to main screen
         goToDashboard();
     }
 
@@ -184,7 +184,7 @@ public class TransferController {
             DashboardController controller = loader.getController();
             controller.initData(currentUser, networkHandler);
 
-            // Mevcut pencere boyutunu ve durumunu al
+            // Get current window size and state
             Stage stage = (Stage) statusLabel.getScene().getWindow();
             boolean isMaximized = stage.isMaximized();
             double width = stage.getWidth();
@@ -192,16 +192,16 @@ public class TransferController {
 
             stage.setScene(new Scene(dashboardView));
 
-            // Boyutu ve durumu koruma
+            // Preserve size and state
             stage.setWidth(width);
             stage.setHeight(height);
             stage.setMaximized(isMaximized);
 
             stage.show();
 
-            // Dashboard'a geçtikten sonra da ekranın yeniden düzenlenmesini zorla
+            // Force layout refresh after transitioning to dashboard
             Platform.runLater(() -> {
-                // Aynı ekran boyutlandırma trick'i
+                // Same screen sizing trick
                 if (isMaximized) {
                     stage.setMaximized(false);
                 }

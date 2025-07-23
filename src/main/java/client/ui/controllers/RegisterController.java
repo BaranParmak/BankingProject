@@ -23,30 +23,30 @@ public class RegisterController {
 
     @FXML
     public void initialize() {
-        // Ekran yüklendikten sonra layout'u zorla güncelle
+        // Force update layout after screen is loaded
         Platform.runLater(() -> {
-            // Pencereyi alabilmek için scene'in yüklenmesini bekle
+            // Wait for scene to load to get the window
             if (usernameField.getScene() != null) {
                 Stage stage = (Stage) usernameField.getScene().getWindow();
                 double width = stage.getWidth();
                 double height = stage.getHeight();
                 boolean isMaximized = stage.isMaximized();
 
-                // Eğer tam ekransa, tam ekrandan çıkar
+                // If maximized, exit full screen
                 if (isMaximized) {
                     stage.setMaximized(false);
                 }
 
-                // Küçük bir değişiklik yapıp hemen geri al
+                // Make a small change and immediately revert it
                 stage.setWidth(width - 1);
                 stage.setHeight(height - 1);
 
-                // Tekrar orijinal boyutuna getir
+                // Restore to original size
                 Platform.runLater(() -> {
                     stage.setWidth(width);
                     stage.setHeight(height);
 
-                    // Eğer tam ekransa, tekrar tam ekran yap
+                    // If it was maximized, restore full screen
                     if (isMaximized) {
                         stage.setMaximized(true);
                     }
@@ -63,7 +63,7 @@ public class RegisterController {
         try {
             Parent loginView = FXMLLoader.load(getClass().getResource("/views/login.fxml"));
 
-            // Mevcut pencere boyutunu ve durumunu al
+            // Get current window size and state
             Stage stage = (Stage) usernameField.getScene().getWindow();
             boolean isMaximized = stage.isMaximized();
             double width = stage.getWidth();
@@ -73,14 +73,14 @@ public class RegisterController {
             stage.setScene(loginScene);
             stage.setTitle("Login");
 
-            // Boyutu ve durumu koruma
+            // Preserve size and state
             stage.setWidth(width);
             stage.setHeight(height);
             stage.setMaximized(isMaximized);
 
             stage.show();
 
-            // Login ekranına geçtikten sonra da ekranın yeniden düzenlenmesini zorla
+            // Force layout refresh after transitioning to login screen
             Platform.runLater(() -> {
                 if (isMaximized) {
                     stage.setMaximized(false);
