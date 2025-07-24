@@ -178,7 +178,8 @@ journalctl -u banking-server.service
 This project is licensed under the MIT License
 
 ### Contributors
-Baran Parmak
+* Baran Parmak
+* Mehmet Kaş
 ### Acknowledgements
 * JavaFX community
 * Oracle for Java
