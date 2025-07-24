@@ -8,6 +8,7 @@ import server.dao.AccountDAO;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ClientHandler implements Runnable {
     private Socket clientSocket;
@@ -15,11 +16,14 @@ public class ClientHandler implements Runnable {
     private PrintWriter out;
     private AuthenticationService authService;
     private AccountDAO accountDAO;
+    private ConcurrentHashMap<String, ClientHandler> loggedInUsers;
+    private String currentUsername = null;  // Track the current logged in user
 
-    public ClientHandler(Socket socket) {
+    public ClientHandler(Socket socket, ConcurrentHashMap<String, ClientHandler> loggedInUsers) {
         this.clientSocket = socket;
         this.authService = new AuthenticationService();
         this.accountDAO = new AccountDAO();
+        this.loggedInUsers = loggedInUsers;
     }
 
     @Override
@@ -40,6 +44,12 @@ public class ClientHandler implements Runnable {
             System.out.println("Error handling client: " + e.getMessage());
         } finally {
             try {
+                // Mark user as logged out when connection is closed
+                if (currentUsername != null) {
+                    loggedInUsers.remove(currentUsername);
+                    System.out.println("User logged out due to disconnection: " + currentUsername);
+                }
+
                 clientSocket.close();
                 System.out.println("🔒 Client connection closed: " + clientSocket.getInetAddress());
             } catch (IOException e) {
@@ -66,6 +76,8 @@ public class ClientHandler implements Runnable {
                     return handleWithdraw(parts[1], Double.parseDouble(parts[2]));
                 case "TRANSFER":
                     return handleTransfer(parts[1], parts[2], Double.parseDouble(parts[3]));
+                case "LOGOUT":
+                    return handleLogout(parts[1]);
                 default:
                     return "FAIL:Unknown command";
             }
@@ -76,9 +88,28 @@ public class ClientHandler implements Runnable {
     }
 
     private String handleLogin(String username, String password) {
+        // Check if user is already logged in
+        if (loggedInUsers.containsKey(username)) {
+            return "ERROR:USER_ALREADY_LOGGED_IN";
+        }
+
         User user = authService.login(username, password);
         if (user != null) {
+            // If login successful, add user to active users list
+            loggedInUsers.put(username, this);
+            currentUsername = username;
+            System.out.println("User logged in: " + username);
             return "SUCCESS:" + user.getCustomerNo() + ":" + user.getFullName();
+        }
+        return "FAIL";
+    }
+
+    private String handleLogout(String username) {
+        if (username != null && username.equals(currentUsername)) {
+            loggedInUsers.remove(username);
+            currentUsername = null;
+            System.out.println("User logged out: " + username);
+            return "SUCCESS";
         }
         return "FAIL";
     }

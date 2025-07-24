@@ -1,10 +1,10 @@
 package common;
 
 public class User {
-    private final String username;
-    private final String password;
-    private final String fullName;
-    private final int customerNo;
+    private String username;
+    private String password;
+    private String fullName;
+    private int customerNo;
 
     public User(String username, String password, String fullName, int customerNo) {
         this.username = username;
@@ -29,4 +29,3 @@ public class User {
         return customerNo;
     }
 }
-

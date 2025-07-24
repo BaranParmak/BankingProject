@@ -79,6 +79,12 @@ public class LoginController {
             String response = networkHandler.sendRequest("LOGIN:" + username + ":" + password);
             String[] parts = response.split(":");
 
+            // Check if the user is already logged in elsewhere
+            if (parts[0].equals("ERROR") && parts.length > 1 && parts[1].equals("USER_ALREADY_LOGGED_IN")) {
+                statusLabel.setText("This account is already logged in from another location");
+                return;
+            }
+
             if (parts[0].equals("SUCCESS")) {
                 int customerNo = Integer.parseInt(parts[1]);
                 String fullName = parts[2];

@@ -175,9 +175,12 @@ public class DashboardController {
     @FXML
     private void handleLogout() {
         try {
+            // Send logout request to server
+            networkHandler.sendRequest("LOGOUT:" + currentUser.getUsername());
+
             Parent loginView = FXMLLoader.load(getClass().getResource("/views/login.fxml"));
 
-            // Get current window size and stat
+            // Get current window size and state
             Stage stage = (Stage) statusLabel.getScene().getWindow();
             boolean isMaximized = stage.isMaximized();
             double width = stage.getWidth();
