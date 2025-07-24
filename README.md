@@ -180,7 +180,7 @@ This project is licensed under the MIT License
 ### Contributors
 Baran Parmak
 ### Acknowledgements
-JavaFX community
-Oracle for Java
-OrangePi community
-All contributors who have helped with this project
+* JavaFX community
+* Oracle for Java
+* OrangePi community
+* All contributors who have helped with this project
