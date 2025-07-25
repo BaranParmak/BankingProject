@@ -12,6 +12,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import java.util.Base64;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -54,6 +55,44 @@ public class DashboardController {
 
             } else {
                 statusLabel.setText("Failed to load account data");
+            }
+        } catch (IOException e) {
+            statusLabel.setText("Error connecting to server");
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleViewTransactionHistory() {
+        try {
+            // Request last 3 transactions from the server
+            String response = networkHandler.sendRequest("GETLASTTRANSACTIONS:" + currentUser.getCustomerNo() + ":3");
+            String[] parts = response.split(":");
+
+            if (parts[0].equals("SUCCESS")) {
+                if (parts.length == 2 && parts[1].equals("NO_TRANSACTIONS")) {
+                    AlertDialog.showInfoDialog(
+                            "Transaction History",
+                            "You have no transaction history yet."
+                    );
+                    return;
+                }
+
+                StringBuilder historyText = new StringBuilder("Your last 3 transactions:\n\n");
+
+                // Skip the first part (SUCCESS) and decode each transaction
+                for (int i = 1; i < parts.length; i++) {
+                    byte[] decodedBytes = Base64.getDecoder().decode(parts[i]);
+                    String txnString = new String(decodedBytes);
+                    historyText.append(txnString).append("\n\n");
+                }
+
+                AlertDialog.showInfoDialog(
+                        "Transaction History",
+                        historyText.toString()
+                );
+            } else {
+                statusLabel.setText("Failed to load transaction history");
             }
         } catch (IOException e) {
             statusLabel.setText("Error connecting to server");

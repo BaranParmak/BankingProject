@@ -2,12 +2,15 @@ package server.net;
 
 import common.Account;
 import common.User;
+import common.Transaction;
 import service.AuthenticationService;
 import service.TransactionService;
 import server.dao.AccountDAO;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.Base64;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ClientHandler implements Runnable {
@@ -78,6 +81,8 @@ public class ClientHandler implements Runnable {
                     return handleTransfer(parts[1], parts[2], Double.parseDouble(parts[3]));
                 case "LOGOUT":
                     return handleLogout(parts[1]);
+                case "GETLASTTRANSACTIONS":
+                    return handleGetLastTransactions(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]));
                 default:
                     return "FAIL:Unknown command";
             }
@@ -155,5 +160,28 @@ public class ClientHandler implements Runnable {
             return success ? "SUCCESS" : "FAIL:Transfer failed";
         }
         return "FAIL:Account not found";
+    }
+
+    private String handleGetLastTransactions(int customerNo, int limit) {
+        Account account = accountDAO.findByCustomerNo(customerNo);
+        if (account == null) {
+            return "FAIL:Account not found";
+        }
+
+        TransactionService service = new TransactionService(customerNo);
+        List<Transaction> transactions = service.getLastTransactions(limit);
+
+        if (transactions.isEmpty()) {
+            return "SUCCESS:NO_TRANSACTIONS";
+        }
+
+        StringBuilder response = new StringBuilder("SUCCESS");
+        for (Transaction txn : transactions) {
+            // Base64 kodlama kullanarak özel karakterleri güvenli hale getiriyoruz
+            String encodedTxn = Base64.getEncoder().encodeToString(txn.toString().getBytes());
+            response.append(":").append(encodedTxn);
+        }
+
+        return response.toString();
     }
 }

@@ -36,7 +36,8 @@
             <Button text="2- DEPOSIT" onAction="#handleDepositAction" styleClass="transaction-button"/>
             <Button text="3- WITHDRAW" onAction="#handleWithdrawAction" styleClass="transaction-button"/>
             <Button text="4- MONEY TRANSFER" onAction="#handleTransferAction" styleClass="transaction-button"/>
-            <Button text="5- EXIT" onAction="#handleLogout" styleClass="transaction-button"/>
+            <Button text="5- TRANSACTION HISTORY" onAction="#handleViewTransactionHistory" styleClass="transaction-button"/>
+            <Button text="6- EXIT" onAction="#handleLogout" styleClass="transaction-button"/>
 
             <Label fx:id="statusLabel" textFill="RED" alignment="CENTER"/>
         </VBox>

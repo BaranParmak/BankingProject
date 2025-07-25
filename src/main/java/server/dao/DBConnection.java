@@ -34,6 +34,19 @@ public class DBConnection {
                 """;
             stmt.execute(createUsersTable);
 
+            // Create 'transactions' table
+            String createTransactionsTable = """
+                CREATE TABLE IF NOT EXISTS transactions (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    type TEXT NOT NULL,
+                    amount REAL NOT NULL,
+                    timestamp INTEGER NOT NULL,
+                    account_no TEXT NOT NULL,
+                    target_account_no TEXT
+                );
+                """;
+            stmt.execute(createTransactionsTable);
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
