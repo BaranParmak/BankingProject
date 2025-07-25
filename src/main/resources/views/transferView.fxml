@@ -3,84 +3,117 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.shape.Line?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
+<BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="client.ui.controllers.TransferController"
             prefHeight="600.0" prefWidth="900.0"
-            style="-fx-background-color: #121212;"
             stylesheets="/css/style.css">
 
-    <!-- Center region - shifted left -->
-    <VBox alignment="TOP_CENTER" spacing="15"
-          AnchorPane.leftAnchor="200.0"
-          AnchorPane.rightAnchor="300.0"
-          AnchorPane.topAnchor="50.0"
-          AnchorPane.bottomAnchor="50.0">
-
-        <!-- Logo -->
-        <ImageView fitWidth="120" fitHeight="120" styleClass="logo">
-            <Image url="/images/logo.png"/>
-        </ImageView>
-
-        <Label text="Money Transfer" style="-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: #ccff00;"/>
-        <Label text="Please provide the following İnformations to realise money transfer."
-               style="-fx-font-size: 14px; -fx-text-fill: #aaaaaa;" wrapText="true" textAlignment="CENTER"/>
-
-        <Region prefHeight="20"/>
-
-        <!-- User Card - 400px fixed width -->
-        <HBox styleClass="user-card" alignment="CENTER_LEFT" spacing="15" prefWidth="400" maxWidth="400">
+    <!-- Top navigation bar with Siemens branding -->
+    <top>
+        <HBox styleClass="top-nav" alignment="CENTER_LEFT" spacing="20">
             <padding>
-                <Insets top="15" right="20" bottom="15" left="20"/>
+                <Insets top="10" right="10" bottom="10" left="10"/>
             </padding>
-            <VBox>
-                <Label fx:id="userNameLabel" text="User Name" style="-fx-font-size: 16px; -fx-text-fill: black; -fx-font-weight: bold;"/>
-                <Label fx:id="balanceLabel" text="Current Balance: $0.00" style="-fx-font-size: 14px; -fx-text-fill: black;"/>
+            <Label styleClass="siemens-logo-text" text="SIEMENS" />
+            <Label text="Banking System" style="-fx-font-size: 16px; -fx-text-fill: white;" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Button text="Back to Dashboard" onAction="#handleBack"
+                    style="-fx-background-color: transparent; -fx-text-fill: #009999; -fx-cursor: hand;"/>
+        </HBox>
+    </top>
+
+    <center>
+        <VBox alignment="TOP_CENTER" spacing="30">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+
+            <!-- Transfer form header -->
+            <VBox alignment="CENTER" spacing="5">
+                <Label text="Money Transfer"
+                       style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #009999;"/>
+                <Label text="Send money to another account securely"
+                       style="-fx-font-size: 14px; -fx-text-fill: #aaaaaa;"/>
             </VBox>
-        </HBox>
 
-        <!-- Line - 400px fixed width -->
-        <Separator prefWidth="400" maxWidth="400" />
+            <!-- User account information card -->
+            <VBox styleClass="user-card" maxWidth="500" alignment="CENTER">
+                <padding>
+                    <Insets top="15" right="20" bottom="15" left="20"/>
+                </padding>
+                <Label text="Your Account Information" style="-fx-font-size: 14px; -fx-text-fill: #aaaaaa;"/>
+                <Label fx:id="userNameLabel" text="User Name"
+                       style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                <Label fx:id="balanceLabel" text="Current Balance: $0.00"
+                       style="-fx-font-size: 16px; -fx-text-fill: #009999;"/>
+            </VBox>
 
-        <Region prefHeight="20"/>
+            <!-- Transfer form -->
+            <VBox styleClass="dialog-box" maxWidth="500" spacing="15">
+                <padding>
+                    <Insets top="20" right="30" bottom="20" left="30"/>
+                </padding>
 
-        <!-- Form fields - 400px fixed width -->
-        <TextField fx:id="receiverAccountField" promptText="Enter Receiver Account Number"
-                   styleClass="text-field" prefWidth="400" maxWidth="400"/>
+                <Label text="Transfer Details"
+                       style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #009999;"/>
 
-        <TextField fx:id="amountField" promptText="Enter Transfer Amount"
-                   styleClass="text-field" prefWidth="400" maxWidth="400"/>
+                <Separator>
+                    <padding>
+                        <Insets top="5" bottom="15"/>
+                    </padding>
+                </Separator>
 
-        <Region prefHeight="20"/>
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label text="Recipient" minWidth="100"/>
+                    <TextField fx:id="receiverAccountField" promptText="Enter account number"
+                               styleClass="text-field" HBox.hgrow="ALWAYS"/>
+                </HBox>
 
-        <!-- Transfer and Back buttons side by side -->
-        <HBox alignment="CENTER" spacing="15">
-            <Button text="Cancel" onAction="#handleBack"
-                    styleClass="secondary-button" prefWidth="150"/>
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label text="Amount" minWidth="100"/>
+                    <TextField fx:id="amountField" promptText="Enter amount"
+                               styleClass="text-field" HBox.hgrow="ALWAYS"/>
+                </HBox>
 
-            <Button text="Transfer" onAction="#handleTransfer"
-                    styleClass="primary-button" prefWidth="150"/>
-        </HBox>
+                <Region prefHeight="15"/>
 
-        <Label fx:id="statusLabel" textFill="RED" alignment="CENTER"/>
-    </VBox>
+                <HBox alignment="CENTER" spacing="15">
+                    <Button text="Cancel" onAction="#handleBack" styleClass="secondary-button" prefWidth="120"/>
+                    <Button text="Transfer" onAction="#handleTransfer" styleClass="primary-button" prefWidth="120"/>
+                </HBox>
 
-    <!-- Confirmation dialog (no longer used, but we're keeping it) -->
+                <Label fx:id="statusLabel" styleClass="status-label" alignment="CENTER"/>
+            </VBox>
+        </VBox>
+    </center>
+
+    <!-- Hidden confirmation dialog (keeping for functionality) -->
     <StackPane fx:id="confirmationDialog" visible="false" style="-fx-background-color: rgba(0,0,0,0.7);"
-               AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-               AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0">
+               BorderPane.alignment="CENTER">
         <VBox styleClass="dialog-box" alignment="CENTER" spacing="15" maxWidth="400" maxHeight="200">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+            <Label text="Confirm Transfer"
+                   style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #009999;"/>
             <Label text="Are you sure you want to proceed with this transaction?"
-                   style="-fx-font-size: 16px; -fx-text-fill: #ccff00; -fx-text-alignment: center;" wrapText="true"/>
+                   style="-fx-font-size: 14px; -fx-text-fill: white; -fx-text-alignment: center;" wrapText="true"/>
             <Label text="This action cannot be undone." style="-fx-font-size: 12px; -fx-text-fill: #aaaaaa;"/>
             <HBox alignment="CENTER" spacing="20">
-                <Button text="Reject" onAction="#handleReject" styleClass="reject-button" prefWidth="100"/>
-                <Button text="Accept" onAction="#handleAccept" styleClass="accept-button" prefWidth="100"/>
+                <Button text="Cancel" onAction="#handleReject" styleClass="reject-button" prefWidth="100"/>
+                <Button text="Confirm" onAction="#handleAccept" styleClass="accept-button" prefWidth="100"/>
             </HBox>
         </VBox>
     </StackPane>
-</AnchorPane>
+
+    <bottom>
+        <HBox alignment="CENTER" spacing="5">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <Label text="© 2025 Siemens Banking App" style="-fx-text-fill: #666666; -fx-font-size: 12px;"/>
+        </HBox>
+    </bottom>
+</BorderPane>

@@ -3,43 +3,126 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.image.Image?>
+<?import javafx.scene.text.Text?>
 
-<StackPane xmlns="http://javafx.com/javafx"
-           xmlns:fx="http://javafx.com/fxml"
-           fx:controller="client.ui.controllers.DashboardController"
-           prefHeight="600.0" prefWidth="900.0"
-           stylesheets="/css/style.css">
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="client.ui.controllers.DashboardController"
+            prefHeight="600.0" prefWidth="900.0"
+            stylesheets="/css/style.css">
 
-    <AnchorPane>
-        <!-- Main content -->
-        <VBox alignment="CENTER" spacing="20" maxWidth="600" AnchorPane.leftAnchor="150"
-              AnchorPane.rightAnchor="150" AnchorPane.topAnchor="50" AnchorPane.bottomAnchor="50">
+    <!-- Top navigation bar with Siemens branding -->
+    <top>
+        <HBox styleClass="top-nav" alignment="CENTER_LEFT" spacing="20">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <Label styleClass="siemens-logo-text" text="SIEMENS" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Label fx:id="welcomeLabel" text="Welcome, User" style="-fx-font-size: 14px; -fx-text-fill: white;" />
+            <Button text="Logout" onAction="#handleLogout"
+                    style="-fx-background-color: transparent; -fx-text-fill: #009999; -fx-cursor: hand;"/>
+        </HBox>
+    </top>
 
-            <!-- Logo -->
-            <ImageView fitWidth="240" fitHeight="240" styleClass="logo">
-                <Image url="/images/logo.png"/>
-            </ImageView>
+    <center>
+        <VBox alignment="TOP_CENTER" spacing="30">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
 
-            <!-- Welcome Label -->
-            <Label fx:id="welcomeLabel" text="Welcome, User"
-                   style="-fx-font-size: 16px; -fx-text-fill: white;"/>
+            <!-- Main dashboard header -->
+            <VBox alignment="CENTER" spacing="5">
+                <Label text="Banking Dashboard"
+                       style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #009999;"/>
+                <Label text="Welcome to your personal banking portal. Select an option below."
+                       style="-fx-font-size: 14px; -fx-text-fill: #aaaaaa;"/>
+            </VBox>
 
-            <Label text="Money Transactions" style="-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: #ccff00;"/>
-            <Label text="Welcome back! Please choose your transaction type."
-                   style="-fx-font-size: 14px; -fx-text-fill: #aaaaaa;" wrapText="true" textAlignment="CENTER"/>
+            <!-- Transaction options in a grid -->
+            <GridPane alignment="CENTER" hgap="20" vgap="20">
+                <padding>
+                    <Insets top="30" right="20" bottom="20" left="20"/>
+                </padding>
 
-            <Region prefHeight="30"/>
+                <!-- Column constraints to make equal width columns -->
+                <columnConstraints>
+                    <ColumnConstraints percentWidth="50" />
+                    <ColumnConstraints percentWidth="50" />
+                </columnConstraints>
 
-            <Button text="1- SHOW BALANCE" onAction="#handleShowBalance" styleClass="transaction-button"/>
-            <Button text="2- DEPOSIT" onAction="#handleDepositAction" styleClass="transaction-button"/>
-            <Button text="3- WITHDRAW" onAction="#handleWithdrawAction" styleClass="transaction-button"/>
-            <Button text="4- MONEY TRANSFER" onAction="#handleTransferAction" styleClass="transaction-button"/>
-            <Button text="5- TRANSACTION HISTORY" onAction="#handleViewTransactionHistory" styleClass="transaction-button"/>
-            <Button text="6- EXIT" onAction="#handleLogout" styleClass="transaction-button"/>
+                <!-- Account Balance -->
+                <VBox styleClass="user-card" spacing="15" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                    <padding>
+                        <Insets top="20" right="20" bottom="20" left="20"/>
+                    </padding>
+                    <Label text="Account Balance" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                    <Label text="View your current account balance and details"
+                           style="-fx-font-size: 12px; -fx-text-fill: #aaaaaa;" wrapText="true"/>
+                    <Region VBox.vgrow="ALWAYS" />
+                    <Button text="Show Balance" onAction="#handleShowBalance" styleClass="primary-button"/>
+                </VBox>
 
-            <Label fx:id="statusLabel" textFill="RED" alignment="CENTER"/>
+                <!-- Transaction History -->
+                <VBox styleClass="user-card" spacing="15" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                    <padding>
+                        <Insets top="20" right="20" bottom="20" left="20"/>
+                    </padding>
+                    <Label text="Transaction History" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                    <Label text="View your recent transaction activities"
+                           style="-fx-font-size: 12px; -fx-text-fill: #aaaaaa;" wrapText="true"/>
+                    <Region VBox.vgrow="ALWAYS" />
+                    <Button text="View History" onAction="#handleViewTransactionHistory" styleClass="primary-button"/>
+                </VBox>
+
+                <!-- Deposit -->
+                <VBox styleClass="user-card" spacing="15" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                    <padding>
+                        <Insets top="20" right="20" bottom="20" left="20"/>
+                    </padding>
+                    <Label text="Deposit Money" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                    <Label text="Add funds to your account"
+                           style="-fx-font-size: 12px; -fx-text-fill: #aaaaaa;" wrapText="true"/>
+                    <Region VBox.vgrow="ALWAYS" />
+                    <Button text="Deposit" onAction="#handleDepositAction" styleClass="primary-button"/>
+                </VBox>
+
+                <!-- Withdraw -->
+                <VBox styleClass="user-card" spacing="15" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                    <padding>
+                        <Insets top="20" right="20" bottom="20" left="20"/>
+                    </padding>
+                    <Label text="Withdraw Money" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                    <Label text="Withdraw funds from your account"
+                           style="-fx-font-size: 12px; -fx-text-fill: #aaaaaa;" wrapText="true"/>
+                    <Region VBox.vgrow="ALWAYS" />
+                    <Button text="Withdraw" onAction="#handleWithdrawAction" styleClass="primary-button"/>
+                </VBox>
+
+                <!-- Transfer -->
+                <VBox styleClass="user-card" spacing="15" GridPane.columnIndex="0" GridPane.rowIndex="2"
+                      GridPane.columnSpan="2" alignment="CENTER">
+                    <padding>
+                        <Insets top="20" right="20" bottom="20" left="20"/>
+                    </padding>
+                    <Label text="Money Transfer" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                    <Label text="Transfer funds to another account"
+                           style="-fx-font-size: 12px; -fx-text-fill: #aaaaaa;" wrapText="true"/>
+                    <Region VBox.vgrow="ALWAYS" />
+                    <Button text="Transfer Money" onAction="#handleTransferAction" styleClass="primary-button"/>
+                </VBox>
+            </GridPane>
+
+            <Label fx:id="statusLabel" styleClass="status-label" alignment="CENTER"/>
         </VBox>
-    </AnchorPane>
-</StackPane>
+    </center>
+
+    <bottom>
+        <HBox alignment="CENTER" spacing="5">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <Label text="© 2025 Siemens Banking App" style="-fx-text-fill: #666666; -fx-font-size: 12px;"/>
+        </HBox>
+    </bottom>
+</BorderPane>

@@ -1,6 +1,6 @@
 /* Global Styles */
 .root {
-    -fx-background-color: #121212;
+    -fx-background-color: #0F2231; /* Siemens dark blue background */
     -fx-font-family: "Segoe UI", sans-serif;
 }
 
@@ -10,7 +10,7 @@
 
 /* TextField Styles */
 .text-field, .password-field {
-    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-background-color: rgba(255, 255, 255, 0.07);
     -fx-background-radius: 5px;
     -fx-text-fill: white;
     -fx-prompt-text-fill: rgba(255, 255, 255, 0.5);
@@ -18,62 +18,116 @@
     -fx-border-width: 0;
 }
 
+.text-field:focused, .password-field:focused {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 159, 227, 0.5), 5, 0, 0, 0);
+}
+
 /* Button Styles */
 .primary-button {
-    -fx-background-color: #ccff00;
-    -fx-text-fill: black;
-    -fx-background-radius: 30px;
+    -fx-background-color: #009999; /* Siemens teal */
+    -fx-text-fill: white;
+    -fx-background-radius: 5px;
     -fx-font-weight: bold;
     -fx-padding: 12px;
     -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 153, 153, 0.3), 3, 0, 0, 3);
+}
+
+.primary-button:hover {
+    -fx-background-color: #00b8b8;
 }
 
 .secondary-button {
     -fx-background-color: rgba(255, 255, 255, 0.1);
     -fx-text-fill: white;
-    -fx-background-radius: 30px;
+    -fx-background-radius: 5px;
     -fx-padding: 12px;
     -fx-cursor: hand;
 }
 
+.secondary-button:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.15);
+}
+
 /* Transaction Button */
 .transaction-button {
-    -fx-background-color: #ccff00;
-    -fx-text-fill: black;
-    -fx-background-radius: 30px;
-    -fx-font-weight: bold;
+    -fx-background-color: #1E3F66; /* Darker Siemens blue */
+    -fx-text-fill: white;
+    -fx-background-radius: 5px;
+    -fx-font-weight: normal;
     -fx-padding: 15px;
     -fx-cursor: hand;
     -fx-min-width: 300px;
+    -fx-border-color: #009999;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+}
+
+.transaction-button:hover {
+    -fx-background-color: #009999;
+    -fx-border-color: #00b8b8;
 }
 
 /* User Card */
 .user-card {
-    -fx-background-color: #ccff00;
-    -fx-background-radius: 15px;
+    -fx-background-color: #1E3F66;
+    -fx-background-radius: 10px;
     -fx-padding: 10px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.3), 10, 0, 0, 5);
+    -fx-border-color: #009999;
+    -fx-border-width: 1px;
+    -fx-border-radius: 10px;
 }
 
 /* Dialog Box */
 .dialog-box {
-    -fx-background-color: rgba(30, 30, 30, 0.9);
+    -fx-background-color: rgba(15, 34, 49, 0.95);
     -fx-background-radius: 10px;
-    -fx-border-color: #333;
+    -fx-border-color: #009999;
     -fx-border-width: 1px;
     -fx-border-radius: 10px;
     -fx-padding: 20px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.5), 15, 0, 0, 8);
 }
 
 .accept-button {
-    -fx-background-color: #32CD32;
+    -fx-background-color: #009999;
+    -fx-text-fill: white;
+    -fx-background-radius: 5px;
+    -fx-cursor: hand;
+    -fx-font-weight: bold;
+}
+
+.reject-button {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
     -fx-text-fill: white;
     -fx-background-radius: 5px;
     -fx-cursor: hand;
 }
 
-.reject-button {
-    -fx-background-color: #FF0000;
-    -fx-text-fill: white;
-    -fx-background-radius: 5px;
-    -fx-cursor: hand;
+/* Siemens Logo Text */
+.siemens-logo-text {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #009999;
+}
+
+/* Separator */
+.separator .line {
+    -fx-border-color: #009999;
+    -fx-border-width: 0.5px;
+}
+
+/* Status Label */
+.status-label {
+    -fx-text-fill: #ff5252;
+    -fx-font-size: 12px;
+}
+
+/* Top Navigation */
+.top-nav {
+    -fx-background-color: #0A1921;
+    -fx-border-color: #1E3F66;
+    -fx-border-width: 0 0 1px 0;
 }
